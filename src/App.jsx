@@ -164,6 +164,8 @@ const App = () => {
           onUpdateExperience={updateExperience}
           onDeleteExperience={deleteExperience}
           wildlife={wildlife}
+
+          
           onAddWildlife={addWildlife}
           onUpdateWildlife={updateWildlife}
           onDeleteWildlife={deleteWildlife}
