@@ -3,13 +3,13 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Hero from "./components/Hero.jsx";
 import Stats from "./components/Stats.jsx";
-import SafariExperiences from "./components/SafariExperiences.jsx";
+import SafariExperiences from "./components/SafariExperience/SafariExperiences.jsx";
 import OurWildlife from "./components/OurWildlife.jsx";
 import ConservationEfforts from "./components/ConservationEfforts.jsx";
 import CTA from "./components/CTA.jsx";
 import Footer from "./components/Footer.jsx";
 import ExperienceDetails from "./components/ExperienceDetails.jsx";
-import AdminPanel from "./components/AdminPanel.jsx";
+import AdminPanel from "./components/AdminPanel/AdminPanel.jsx";
 
 // Dummy data
 const defaultSafariExperiences = [

@@ -1,0 +1,198 @@
+.safari-experiences {
+  padding: 5rem 0;
+  background-color: #f8f9fa;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.section-header p {
+  color: #7f8c8d;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.experiences-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2rem;
+  justify-items: center; 
+  max-width: 1200px; 
+  margin: 0 auto; 
+}
+
+.experience-card {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%; 
+  max-width: 380px; 
+}
+
+.experience-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.experience-card .image-container {
+  position: relative;
+  padding-top: 66.67%; /* 2:3 aspect ratio */
+  overflow: hidden;
+}
+
+.experience-card img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.experience-card .content {
+  padding: 1.5rem;
+}
+
+.experience-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.experience-card .rating {
+  display: inline-block;
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.experience-card p {
+  color: #7f8c8d;
+  margin: 1rem 0;
+}
+
+.experience-card .price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #27ae60;
+}
+
+.experience-card .details-btn {
+  display: inline-block;
+  background-color: #3498db;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.experience-card .details-btn:hover {
+  background-color: #2980b9;
+}
+
+.admin-controls {
+  margin-bottom: 2rem;
+  text-align: center; /* Center the admin controls */
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.add-experience-form {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.admin-actions {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.admin-actions button,
+.admin-actions a {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Container for the entire section */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .experiences-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .experiences-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+  
+  .experience-card {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .experiences-grid {
+    grid-template-columns: 1fr;
+  }
+}
