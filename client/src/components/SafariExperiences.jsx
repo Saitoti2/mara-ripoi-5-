@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ExperienceUpdateModal from "./ExperienceUpdateModal";
+import ExperienceUpdateModal from "src/components/ExperienceUpdateModal";
 
 // ✅ Default safari experiences
 const safariExperiences = [
