@@ -48,12 +48,18 @@ const AdminPanel = ({
 
   const handleExperienceSubmit = (e) => {
     e.preventDefault();
+    const experienceData = {
+      ...newExperience,
+      image: newExperience.image || "https://via.placeholder.com/400x300?text=No+Image"
+    };
+    
     if (editingExperience) {
-      onUpdateExperience(editingExperience.id, newExperience);
+      onUpdateExperience(editingExperience.id, experienceData);
       setEditingExperience(null);
     } else {
-      onAddExperience(newExperience);
+      onAddExperience(experienceData);
     }
+    
     setNewExperience({
       title: "",
       description: "",
@@ -65,12 +71,18 @@ const AdminPanel = ({
 
   const handleWildlifeSubmit = (e) => {
     e.preventDefault();
+    const wildlifeData = {
+      ...newWildlife,
+      image: newWildlife.image || "https://via.placeholder.com/400x300?text=No+Image"
+    };
+    
     if (editingWildlife) {
-      onUpdateWildlife(editingWildlife.id, newWildlife);
+      onUpdateWildlife(editingWildlife.id, wildlifeData);
       setEditingWildlife(null);
     } else {
-      onAddWildlife(newWildlife);
+      onAddWildlife(wildlifeData);
     }
+    
     setNewWildlife({
       name: "",
       description: "",
@@ -184,16 +196,18 @@ const AdminPanel = ({
                   <button
                     type="button"
                     onClick={() => fileInputRef.current.click()}
-                    className="upload-btn"
-                  >
+                    className="upload-btn">
                     Upload Image
                   </button>
                   {newExperience.image && (
-                    <img
-                      src={newExperience.image}
-                      alt="Preview"
-                      className="preview-image"
-                    />
+                    <div className="preview-container" style={{ maxWidth: "200px", marginTop: "10px" }}>
+                      <img
+                        src={newExperience.image}
+                        alt="Preview"
+                        className="preview-image"
+                        style={{ width: "100%", height: "auto", objectFit: "cover" }}
+                      />
+                    </div>
                   )}
                 </div>
               </div>
@@ -248,14 +262,17 @@ const AdminPanel = ({
               {experiences.map((experience) => (
                 <div key={experience.id} className="admin-item">
                   <div className="item-info">
-                    <img
-                      src={experience.image}
-                      alt={experience.title}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "https://via.placeholder.com/150?text=No+Image";
-                      }}
-                    />
+                    <div style={{ width: "150px", height: "100px", overflow: "hidden" }}>
+                      <img
+                        src={experience.image}
+                        alt={experience.title}
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "https://via.placeholder.com/150?text=No+Image";
+                        }}
+                      />
+                    </div>
                     <div>
                       <h3>{experience.title}</h3>
                       <p>{experience.description.substring(0, 100)}...</p>
@@ -329,11 +346,14 @@ const AdminPanel = ({
                     Upload Image
                   </button>
                   {newWildlife.image && (
-                    <img
-                      src={newWildlife.image}
-                      alt="Preview"
-                      className="preview-image"
-                    />
+                    <div className="preview-container" style={{ maxWidth: "200px", marginTop: "10px" }}>
+                      <img
+                        src={newWildlife.image}
+                        alt="Preview"
+                        className="preview-image"
+                        style={{ width: "100%", height: "auto", objectFit: "cover" }}
+                      />
+                    </div>
                   )}
                 </div>
               </div>
@@ -358,14 +378,17 @@ const AdminPanel = ({
               {wildlife.map((animal) => (
                 <div key={animal.id} className="admin-item">
                   <div className="item-info">
-                    <img
-                      src={animal.image}
-                      alt={animal.name}
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = "https://via.placeholder.com/150?text=No+Image";
-                      }}
-                    />
+                    <div style={{ width: "150px", height: "100px", overflow: "hidden" }}>
+                      <img
+                        src={animal.image}
+                        alt={animal.name}
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = "https://via.placeholder.com/150?text=No+Image";
+                        }}
+                      />
+                    </div>
                     <div>
                       <h3>{animal.name}</h3>
                       <p>{animal.description.substring(0, 100)}...</p>
@@ -396,3 +419,4 @@ const AdminPanel = ({
 };
 
 export default AdminPanel;
+

@@ -160,11 +160,11 @@ const SafariExperiences = ({ experiences, onAdd, onUpdate, onDelete, userRole })
               key={experience.id}
               className="experience-card bg-white rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:shadow-xl hover:-translate-y-1"
             >
-              <div className="relative pb-2/3">
+              <div className="relative" style={{ height: "250px", overflow: "hidden" }}>
                 <img
                   src={experience.image}
                   alt={experience.title}
-                  className="absolute h-full w-full object-cover"
+                  className="w-full h-full object-cover"
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = "https://via.placeholder.com/400x300?text=No+Image";
