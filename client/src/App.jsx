@@ -34,15 +34,21 @@ const defaultSafariExperiences = [
 const defaultWildlife = [
   {
     id: 1,
-    name: "Lion",
-    description: "King of the Jungle, known for its strength and pride.",
-    image: "https://example.com/lion.jpg"
+    name: "African Lion",
+    description: "The king of the African savanna, known for its majestic mane and powerful presence.",
+    image: "/images/wildlife/lion.jpg"
   },
   {
     id: 2,
-    name: "Elephant",
-    description: "The largest land animal, revered for its intelligence.",
-    image: "https://example.com/elephant.jpg"
+    name: "African Elephant",
+    description: "The world's largest land mammal, known for its intelligence and complex social structure.",
+    image: "/images/wildlife/elephant.jpg"
+  },
+  {
+    id: 3,
+    name: "Leopard",
+    description: "A stealthy big cat known for its beautiful spotted coat and tree-climbing abilities.",
+    image: "/images/wildlife/leopard.jpg"
   }
 ];
 

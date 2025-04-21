@@ -2,8 +2,16 @@ import React from "react";
 
 const Hero = () => {
   return (
-    <div className="relative h-screen bg-cover bg-center" style={{ backgroundImage: "url('/images/safari-hero.jpg')" }}>
-      <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center p-6">
+    <div 
+      className="relative h-screen bg-cover bg-center bg-fixed"
+      style={{ 
+        backgroundImage: "url('/images/hero-bg.jpg')",
+        backgroundPosition: "center 40%"
+      }}
+    >
+      {/* Add a darker overlay for better text readability */}
+      <div className="absolute inset-0 bg-black opacity-50"></div>
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
         <h1 className="text-white text-5xl md:text-6xl font-bold">
           Experience Wild Africa at Its Finest
         </h1>

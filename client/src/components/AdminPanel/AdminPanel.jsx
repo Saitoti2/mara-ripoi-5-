@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import "./AdminPanel.css";
 
@@ -27,6 +27,24 @@ const AdminPanel = ({
   });
   const [editingExperience, setEditingExperience] = useState(null);
   const [editingWildlife, setEditingWildlife] = useState(null);
+
+  const fileInputRef = useRef(null);
+  const wildlifeFileInputRef = useRef(null);
+
+  const handleImageUpload = (e, type) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (type === "experience") {
+          setNewExperience((prev) => ({ ...prev, image: e.target.result }));
+        } else {
+          setNewWildlife((prev) => ({ ...prev, image: e.target.result }));
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleExperienceSubmit = (e) => {
     e.preventDefault();
@@ -103,7 +121,6 @@ const AdminPanel = ({
   return (
     <div className="admin-panel">
       <header className="admin-header">
-       
         <h1>Mara Ripoi Admin Panel</h1>
         <Link to="/" className="back-to-site">
           Back to Website
@@ -154,16 +171,31 @@ const AdminPanel = ({
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="image">Image URL:</label>
-                <input
-                  type="url"
-                  id="image"
-                  value={newExperience.image}
-                  onChange={(e) =>
-                    setNewExperience({ ...newExperience, image: e.target.value })
-                  }
-                  required
-                />
+                <label htmlFor="image">Image:</label>
+                <div className="image-upload-container">
+                  <input
+                    type="file"
+                    id="image"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e, "experience")}
+                    className="hidden"
+                    ref={fileInputRef}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current.click()}
+                    className="upload-btn"
+                  >
+                    Upload Image
+                  </button>
+                  {newExperience.image && (
+                    <img
+                      src={newExperience.image}
+                      alt="Preview"
+                      className="preview-image"
+                    />
+                  )}
+                </div>
               </div>
               <div className="form-group">
                 <label htmlFor="price">Price:</label>
@@ -279,16 +311,31 @@ const AdminPanel = ({
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="wildlife-image">Image URL:</label>
-                <input
-                  type="url"
-                  id="wildlife-image"
-                  value={newWildlife.image}
-                  onChange={(e) =>
-                    setNewWildlife({ ...newWildlife, image: e.target.value })
-                  }
-                  required
-                />
+                <label htmlFor="wildlife-image">Image:</label>
+                <div className="image-upload-container">
+                  <input
+                    type="file"
+                    id="wildlife-image"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e, "wildlife")}
+                    className="hidden"
+                    ref={wildlifeFileInputRef}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => wildlifeFileInputRef.current.click()}
+                    className="upload-btn"
+                  >
+                    Upload Image
+                  </button>
+                  {newWildlife.image && (
+                    <img
+                      src={newWildlife.image}
+                      alt="Preview"
+                      className="preview-image"
+                    />
+                  )}
+                </div>
               </div>
               <div className="form-actions">
                 <button type="submit" className="btn-primary">
