@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./SafariExperiences.css";
 
@@ -11,10 +11,37 @@ const SafariExperiences = ({ experiences, onAdd, onUpdate, onDelete, userRole })
     price: "",
     rating: 0
   });
+  const [localExperiences, setLocalExperiences] = useState(experiences);
+
+  
+  useEffect(() => {
+    const savedExperiences = localStorage.getItem('experiences');
+    if (savedExperiences) {
+      setLocalExperiences(JSON.parse(savedExperiences));
+    } else {
+      setLocalExperiences(experiences);
+    }
+  }, [experiences]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    
+    const newExp = {
+      ...newExperience,
+      id: Date.now().toString() // Temporary ID
+    };
+    
+    
+    const updatedExperiences = [...localExperiences, newExp];
+    setLocalExperiences(updatedExperiences);
+    
+   
+    localStorage.setItem('experiences', JSON.stringify(updatedExperiences));
+    
+    
     onAdd(newExperience);
+    
     setNewExperience({
       title: "",
       description: "",
@@ -23,6 +50,18 @@ const SafariExperiences = ({ experiences, onAdd, onUpdate, onDelete, userRole })
       rating: 0
     });
     setShowAddForm(false);
+  };
+
+  const handleDelete = (id) => {
+   
+    const updatedExperiences = localExperiences.filter(exp => exp.id !== id);
+    setLocalExperiences(updatedExperiences);
+    
+   
+    localStorage.setItem('experiences', JSON.stringify(updatedExperiences));
+    
+    
+    onDelete(id);
   };
 
   const isAdmin = userRole === "admin";
@@ -155,7 +194,7 @@ const SafariExperiences = ({ experiences, onAdd, onUpdate, onDelete, userRole })
         )}
 
         <div className="experiences-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {experiences.map((experience) => (
+          {localExperiences.map((experience) => (
             <div
               key={experience.id}
               className="experience-card bg-white rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:shadow-xl hover:-translate-y-1"
@@ -192,7 +231,7 @@ const SafariExperiences = ({ experiences, onAdd, onUpdate, onDelete, userRole })
                 {isAdmin && (
                   <div className="admin-actions mt-4 pt-4 border-t border-gray-200 flex justify-between">
                     <button
-                      onClick={() => onDelete(experience.id)}
+                      onClick={() => handleDelete(experience.id)}
                       className="text-red-600 hover:text-red-800 transition duration-300"
                     >
                       Delete

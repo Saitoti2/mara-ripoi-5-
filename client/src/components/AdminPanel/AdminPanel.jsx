@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./AdminPanel.css";
 
@@ -27,9 +27,35 @@ const AdminPanel = ({
   });
   const [editingExperience, setEditingExperience] = useState(null);
   const [editingWildlife, setEditingWildlife] = useState(null);
+  const [localExperiences, setLocalExperiences] = useState(experiences);
+  const [localWildlife, setLocalWildlife] = useState(wildlife);
 
   const fileInputRef = useRef(null);
   const wildlifeFileInputRef = useRef(null);
+
+  // Load data from localStorage on component mount
+  useEffect(() => {
+    const savedExperiences = localStorage.getItem('experiences');
+    const savedWildlife = localStorage.getItem('wildlife');
+    
+    if (savedExperiences) {
+      setLocalExperiences(JSON.parse(savedExperiences));
+    } else {
+      setLocalExperiences(experiences);
+    }
+    
+    if (savedWildlife) {
+      setLocalWildlife(JSON.parse(savedWildlife));
+    } else {
+      setLocalWildlife(wildlife);
+    }
+  }, [experiences, wildlife]);
+
+  // Update localStorage when data changes
+  useEffect(() => {
+    localStorage.setItem('experiences', JSON.stringify(localExperiences));
+    localStorage.setItem('wildlife', JSON.stringify(localWildlife));
+  }, [localExperiences, localWildlife]);
 
   const handleImageUpload = (e, type) => {
     const file = e.target.files[0];
@@ -54,9 +80,26 @@ const AdminPanel = ({
     };
     
     if (editingExperience) {
+      // Update in local state first for immediate UI update
+      const updatedExperiences = localExperiences.map(exp => 
+        exp.id === editingExperience.id ? {...exp, ...experienceData} : exp
+      );
+      setLocalExperiences(updatedExperiences);
+      
+      // Then update through the prop function (which might update parent state or API)
       onUpdateExperience(editingExperience.id, experienceData);
       setEditingExperience(null);
     } else {
+      // Create a new experience with a temporary ID
+      const newExp = {
+        ...experienceData,
+        id: Date.now().toString() // Temporary ID until backend assigns one
+      };
+      
+      // Update local state first
+      setLocalExperiences([...localExperiences, newExp]);
+      
+      // Then add through the prop function
       onAddExperience(experienceData);
     }
     
@@ -77,9 +120,26 @@ const AdminPanel = ({
     };
     
     if (editingWildlife) {
+      // Update in local state first
+      const updatedWildlife = localWildlife.map(animal => 
+        animal.id === editingWildlife.id ? {...animal, ...wildlifeData} : animal
+      );
+      setLocalWildlife(updatedWildlife);
+      
+      // Then update through the prop function
       onUpdateWildlife(editingWildlife.id, wildlifeData);
       setEditingWildlife(null);
     } else {
+      // Create a new wildlife with a temporary ID
+      const newAnimal = {
+        ...wildlifeData,
+        id: Date.now().toString() // Temporary ID
+      };
+      
+      // Update local state first
+      setLocalWildlife([...localWildlife, newAnimal]);
+      
+      // Then add through the prop function
       onAddWildlife(wildlifeData);
     }
     
@@ -108,6 +168,20 @@ const AdminPanel = ({
       description: animal.description,
       image: animal.image,
     });
+  };
+
+  const handleDeleteExperience = (id) => {
+    // Update local state first
+    setLocalExperiences(localExperiences.filter(exp => exp.id !== id));
+    // Then delete through the prop function
+    onDeleteExperience(id);
+  };
+
+  const handleDeleteWildlife = (id) => {
+    // Update local state first
+    setLocalWildlife(localWildlife.filter(animal => animal.id !== id));
+    // Then delete through the prop function
+    onDeleteWildlife(id);
   };
 
   const cancelEditing = () => {
@@ -196,7 +270,8 @@ const AdminPanel = ({
                   <button
                     type="button"
                     onClick={() => fileInputRef.current.click()}
-                    className="upload-btn">
+                    className="upload-btn"
+                  >
                     Upload Image
                   </button>
                   {newExperience.image && (
@@ -259,7 +334,7 @@ const AdminPanel = ({
 
             <h2>Manage Experiences</h2>
             <div className="items-list">
-              {experiences.map((experience) => (
+              {localExperiences.map((experience) => (
                 <div key={experience.id} className="admin-item">
                   <div className="item-info">
                     <div style={{ width: "150px", height: "100px", overflow: "hidden" }}>
@@ -290,7 +365,7 @@ const AdminPanel = ({
                       Edit
                     </button>
                     <button
-                      onClick={() => onDeleteExperience(experience.id)}
+                      onClick={() => handleDeleteExperience(experience.id)}
                       className="btn-delete"
                     >
                       Delete
@@ -375,7 +450,7 @@ const AdminPanel = ({
 
             <h2>Manage Wildlife</h2>
             <div className="items-list">
-              {wildlife.map((animal) => (
+              {localWildlife.map((animal) => (
                 <div key={animal.id} className="admin-item">
                   <div className="item-info">
                     <div style={{ width: "150px", height: "100px", overflow: "hidden" }}>
@@ -402,7 +477,7 @@ const AdminPanel = ({
                       Edit
                     </button>
                     <button
-                      onClick={() => onDeleteWildlife(animal.id)}
+                      onClick={() => handleDeleteWildlife(animal.id)}
                       className="btn-delete"
                     >
                       Delete
