@@ -4,7 +4,7 @@ const CTA = () => {
   return (
     <section
       className="relative bg-cover bg-center py-24 text-center text-white"
-      style={{ backgroundImage: "url('/cta-bg.jpg')" }} // Ensure this image exists in your public folder
+      style={{ backgroundImage: "url('/background-mara-ripoi.jpg')" }} // Ensure the image is in the public folder
     >
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
       <div className="relative z-10 max-w-3xl mx-auto px-6">

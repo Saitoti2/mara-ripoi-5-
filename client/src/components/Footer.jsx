@@ -7,7 +7,7 @@ const Footer = () => {
       <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
           <h3 className="text-xl font-bold text-white flex items-center">
-            🐾 Mara Ripoi
+             Mara Ripoi
           </h3>
           <p className="mt-2">
             Experience the magic of African wildlife while contributing to its conservation.

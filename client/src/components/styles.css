@@ -1,20 +1,23 @@
-/* Basic modal styling */
+/* styles.css */
+
+/* Modal container */
 .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .modal img {
-    width: 100px;
-    height: 100px;
-    margin: 5px;
-  }
-  
+  position: fixed;
+  inset: 0; /* shorthand for top: 0; right: 0; bottom: 0; left: 0 */
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Images inside the modal */
+.modal img {
+  width: 100px;
+  height: 100px;
+  margin: 5px;
+  object-fit: cover; /* ensure images don't stretch weirdly */
+  border-radius: 0.5rem; /* slightly rounded corners for better look */
+}

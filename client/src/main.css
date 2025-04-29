@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Enable smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Modal Styles */
+@layer components {
+  .modal {
+    @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[1000];
+  }
+
+  .modal img {
+    @apply w-24 h-24 m-1;
+  }
+}

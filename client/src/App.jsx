@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+// Corrected imports
+import Navbar from "./components/Navbar/Navbar.jsx"; // Ensure correct path to Navbar
 import Hero from "./components/Hero.jsx";
 import Stats from "./components/Stats.jsx";
 import SafariExperiences from "./components/SafariExperience/SafariExperiences.jsx";
@@ -11,6 +13,10 @@ import Footer from "./components/Footer.jsx";
 import ExperienceDetails from "./components/ExperienceDetails.jsx";
 import AdminPanel from "./components/AdminPanel/AdminPanel.jsx";
 
+// Login and Signup paths
+import Login from "./components/ShareholderLogin/Login.jsx";
+import Signup from "./components/ShareholderSignup/Signup.jsx";
+
 // Dummy data
 const defaultSafariExperiences = [
   {
@@ -19,7 +25,7 @@ const defaultSafariExperiences = [
     description: "Experience the wildlife of Kenya's famous game reserve.",
     image: "https://example.com/masai-mara.jpg",
     price: "$1200",
-    rating: 4.8
+    rating: 4.8,
   },
   {
     id: 2,
@@ -27,29 +33,32 @@ const defaultSafariExperiences = [
     description: "Witness the Great Migration and stunning landscapes.",
     image: "https://example.com/serengeti.jpg",
     price: "$1500",
-    rating: 4.9
-  }
+    rating: 4.9,
+  },
 ];
 
 const defaultWildlife = [
   {
     id: 1,
     name: "African Lion",
-    description: "The king of the African savanna, known for its majestic mane and powerful presence.",
-    image: "/images/wildlife/lion.jpg"
+    description:
+      "The king of the African savanna, known for its majestic mane and powerful presence.",
+    image: "/images/wildlife/lion.jpg",
   },
   {
     id: 2,
     name: "African Elephant",
-    description: "The world's largest land mammal, known for its intelligence and complex social structure.",
-    image: "/images/wildlife/elephant.jpg"
+    description:
+      "The world's largest land mammal, known for its intelligence and complex social structure.",
+    image: "/images/wildlife/elephant.jpg",
   },
   {
     id: 3,
     name: "Leopard",
-    description: "A stealthy big cat known for its beautiful spotted coat and tree-climbing abilities.",
-    image: "/images/wildlife/leopard.jpg"
-  }
+    description:
+      "A stealthy big cat known for its beautiful spotted coat and tree-climbing abilities.",
+    image: "/images/wildlife/leopard.jpg",
+  },
 ];
 
 // Home Component
@@ -62,9 +71,10 @@ const Home = ({
   onAddWildlife,
   onUpdateWildlife,
   onDeleteWildlife,
-  userRole
+  userRole,
 }) => (
   <>
+    <Navbar /> {/* Add the Navbar here */}
     <Hero />
     <Stats />
     <SafariExperiences
@@ -72,14 +82,14 @@ const Home = ({
       onAdd={onAddExperience}
       onUpdate={onUpdateExperience}
       onDelete={onDeleteExperience}
-      userRole={userRole} // Pass userRole to SafariExperiences
+      userRole={userRole}
     />
     <OurWildlife
       wildlife={wildlife}
       onAdd={onAddWildlife}
       onUpdate={onUpdateWildlife}
       onDelete={onDeleteWildlife}
-      userRole={userRole} // Pass userRole to OurWildlife
+      userRole={userRole}
     />
     <ConservationEfforts />
     <CTA />
@@ -170,8 +180,6 @@ const App = () => {
           onUpdateExperience={updateExperience}
           onDeleteExperience={deleteExperience}
           wildlife={wildlife}
-
-          
           onAddWildlife={addWildlife}
           onUpdateWildlife={updateWildlife}
           onDeleteWildlife={deleteWildlife}
@@ -180,17 +188,12 @@ const App = () => {
     },
     {
       path: "/login",
-      element: (
-        <div>
-          <button onClick={() => handleLogin("admin")}>Login as Admin</button>
-          <button onClick={() => handleLogin("user")}>Login as User</button>
-        </div>
-      ),
+      element: <Login />,
     },
     {
       path: "/signup",
-      element: <div>Signup Page (Implement later)</div>,
-    }
+      element: <Signup />,
+    },
   ]);
 
   return <RouterProvider router={router} />;
