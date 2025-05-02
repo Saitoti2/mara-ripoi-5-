@@ -299,20 +299,17 @@ const AdminPanel = ({
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="rating">Rating (0-5):</label>
+                <label htmlFor="rating">Rating:</label>
                 <input
                   type="number"
                   id="rating"
+                  value={newExperience.rating}
+                  onChange={(e) =>
+                    setNewExperience({ ...newExperience, rating: e.target.value })
+                  }
                   min="0"
                   max="5"
                   step="0.1"
-                  value={newExperience.rating}
-                  onChange={(e) =>
-                    setNewExperience({
-                      ...newExperience,
-                      rating: parseFloat(e.target.value),
-                    })
-                  }
                   required
                 />
               </div>
@@ -351,10 +348,6 @@ const AdminPanel = ({
                     <div>
                       <h3>{experience.title}</h3>
                       <p>{experience.description.substring(0, 100)}...</p>
-                      <p>
-                        <strong>Price:</strong> {experience.price} | <strong>Rating:</strong>{" "}
-                        {experience.rating}/5
-                      </p>
                     </div>
                   </div>
                   <div className="item-actions">
@@ -392,9 +385,9 @@ const AdminPanel = ({
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="wildlife-description">Description:</label>
+                <label htmlFor="description">Description:</label>
                 <textarea
-                  id="wildlife-description"
+                  id="description"
                   value={newWildlife.description}
                   onChange={(e) =>
                     setNewWildlife({ ...newWildlife, description: e.target.value })
@@ -403,11 +396,11 @@ const AdminPanel = ({
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="wildlife-image">Image:</label>
+                <label htmlFor="image">Image:</label>
                 <div className="image-upload-container">
                   <input
                     type="file"
-                    id="wildlife-image"
+                    id="image"
                     accept="image/*"
                     onChange={(e) => handleImageUpload(e, "wildlife")}
                     className="hidden"
@@ -494,4 +487,3 @@ const AdminPanel = ({
 };
 
 export default AdminPanel;
-

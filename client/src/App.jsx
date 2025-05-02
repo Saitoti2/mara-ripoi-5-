@@ -1,67 +1,48 @@
-import React, { useState, useEffect } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Outlet,
+  useLocation,
+} from 'react-router-dom';
 
-// Corrected imports
-import Navbar from "./components/Navbar/Navbar.jsx"; // Ensure correct path to Navbar
-import Hero from "./components/Hero.jsx";
-import Stats from "./components/Stats.jsx";
-import SafariExperiences from "./components/SafariExperience/SafariExperiences.jsx";
-import OurWildlife from "./components/OurWildlife.jsx";
-import ConservationEfforts from "./components/ConservationEfforts.jsx";
-import CTA from "./components/CTA.jsx";
-import Footer from "./components/Footer.jsx";
-import ExperienceDetails from "./components/ExperienceDetails.jsx";
-import AdminPanel from "./components/AdminPanel/AdminPanel.jsx";
+// Components
+import Navbar from './components/Navbar/Navbar.jsx';
+import Hero from './components/Hero.jsx';
+import Stats from './components/Stats.jsx';
+import SafariExperiences from './components/SafariExperience/SafariExperiences.jsx';
+import OurWildlife from './components/OurWildlife.jsx';
+import WildlifeForm from './components/WildlifeForm.jsx'; // ✅ NEW: Admin-only form
+import ConservationEfforts from './components/ConservationEfforts.jsx';
+import CTA from './components/CTA.jsx';
+import Footer from './components/Footer.jsx';
+import ExperienceDetails from './components/ExperienceDetails.jsx';
+import AdminPanel from './components/AdminPanel/AdminPanel.jsx';
 
-// Login and Signup paths
-import Login from "./components/ShareholderLogin/Login.jsx";
-import Signup from "./components/ShareholderSignup/Signup.jsx";
+// Auth
+import Login from './components/ShareholderLogin/Login.jsx';
+import Signup from './components/ShareholderSignup/Signup.jsx';
+import ChooseRole from './components/ChooseRole/ChooseRole.jsx';
 
-// Dummy data
-const defaultSafariExperiences = [
-  {
-    id: 1,
-    title: "Masai Mara Adventure",
-    description: "Experience the wildlife of Kenya's famous game reserve.",
-    image: "https://example.com/masai-mara.jpg",
-    price: "$1200",
-    rating: 4.8,
-  },
-  {
-    id: 2,
-    title: "Serengeti Safari",
-    description: "Witness the Great Migration and stunning landscapes.",
-    image: "https://example.com/serengeti.jpg",
-    price: "$1500",
-    rating: 4.9,
-  },
-];
+// API instance
+import api from './api/api'; // Axios instance
 
-const defaultWildlife = [
-  {
-    id: 1,
-    name: "African Lion",
-    description:
-      "The king of the African savanna, known for its majestic mane and powerful presence.",
-    image: "/images/wildlife/lion.jpg",
-  },
-  {
-    id: 2,
-    name: "African Elephant",
-    description:
-      "The world's largest land mammal, known for its intelligence and complex social structure.",
-    image: "/images/wildlife/elephant.jpg",
-  },
-  {
-    id: 3,
-    name: "Leopard",
-    description:
-      "A stealthy big cat known for its beautiful spotted coat and tree-climbing abilities.",
-    image: "/images/wildlife/leopard.jpg",
-  },
-];
+const Layout = ({ userRole }) => {
+  const location = useLocation();
+  const hideNavRoutes = ['/login', '/signup'];
+  const isAuthRoute = hideNavRoutes.some((path) =>
+    location.pathname.startsWith(path)
+  );
 
-// Home Component
+  return (
+    <>
+      {!isAuthRoute && <Navbar />}
+      <Outlet />
+      {!isAuthRoute && <Footer />}
+    </>
+  );
+};
+
 const Home = ({
   experiences,
   wildlife,
@@ -74,7 +55,6 @@ const Home = ({
   userRole,
 }) => (
   <>
-    <Navbar /> {/* Add the Navbar here */}
     <Hero />
     <Stats />
     <SafariExperiences
@@ -91,108 +71,163 @@ const Home = ({
       onDelete={onDeleteWildlife}
       userRole={userRole}
     />
+    {userRole === 'admin' && <WildlifeForm />} {/* ✅ Admins can upload wildlife */}
     <ConservationEfforts />
     <CTA />
-    <Footer />
   </>
 );
 
-// Main App
 const App = () => {
-  const [experiences, setExperiences] = useState(defaultSafariExperiences);
-  const [wildlife, setWildlife] = useState(defaultWildlife);
-  const [userRole, setUserRole] = useState(localStorage.getItem("userRole") || "guest");
+  const [experiences, setExperiences] = useState([]);
+  const [wildlife, setWildlife] = useState([]);
+  const [userRole, setUserRole] = useState('guest');
 
   useEffect(() => {
-    const storedRole = localStorage.getItem("userRole");
-    if (storedRole) {
-      setUserRole(storedRole);
-    }
+    const storedRole = localStorage.getItem('userRole');
+    if (storedRole) setUserRole(storedRole);
+
+    fetchExperiences();
+    fetchWildlife();
   }, []);
 
-  const addExperience = (newExperience) => {
-    setExperiences([...experiences, { id: Date.now(), ...newExperience }]);
+  // Fetch Experiences
+  const fetchExperiences = async () => {
+    try {
+      const response = await api.get('/safari-experiences/');
+      setExperiences(response.data);
+    } catch (error) {
+      console.error('Error fetching experiences:', error);
+    }
   };
 
-  const updateExperience = (id, updatedExperience) => {
-    setExperiences(
-      experiences.map((exp) => (exp.id === id ? { ...exp, ...updatedExperience } : exp))
-    );
+  // Fetch Wildlife
+  const fetchWildlife = async () => {
+    try {
+      const response = await api.get('/wildlife/list/'); // ✅ Use correct endpoint
+      setWildlife(response.data);
+    } catch (error) {
+      console.error('Error fetching wildlife:', error);
+    }
   };
 
-  const deleteExperience = (id) => {
-    setExperiences(experiences.filter((exp) => exp.id !== id));
+  // CRUD: Experiences
+  const addExperience = async (newExperience) => {
+    try {
+      const response = await api.post('/safari-experiences/', newExperience);
+      setExperiences((prev) => [...prev, response.data]);
+    } catch (error) {
+      console.error('Error adding experience:', error);
+    }
   };
 
-  const addWildlife = (newWildlife) => {
-    setWildlife([...wildlife, { id: Date.now(), ...newWildlife }]);
+  const updateExperience = async (id, updatedData) => {
+    try {
+      const response = await api.put(`/safari-experiences/${id}/`, updatedData);
+      setExperiences((prev) =>
+        prev.map((exp) => (exp.id === id ? response.data : exp))
+      );
+    } catch (error) {
+      console.error('Error updating experience:', error);
+    }
   };
 
-  const updateWildlife = (id, updatedWildlife) => {
-    setWildlife(
-      wildlife.map((animal) =>
-        animal.id === id ? { ...animal, ...updatedWildlife } : animal
-      )
-    );
+  const deleteExperience = async (id) => {
+    try {
+      await api.delete(`/safari-experiences/${id}/`);
+      setExperiences((prev) => prev.filter((exp) => exp.id !== id));
+    } catch (error) {
+      console.error('Error deleting experience:', error);
+    }
   };
 
-  const deleteWildlife = (id) => {
-    setWildlife(wildlife.filter((animal) => animal.id !== id));
+  // CRUD: Wildlife
+  const addWildlife = async (newWildlife) => {
+    try {
+      const response = await api.post('/wildlife/create/', newWildlife); // ✅ Correct path
+      setWildlife((prev) => [...prev, response.data]);
+    } catch (error) {
+      console.error('Error adding wildlife:', error);
+    }
   };
 
-  const handleLogin = (role) => {
-    localStorage.setItem("userRole", role);
-    setUserRole(role);
+  const updateWildlife = async (id, updatedData) => {
+    try {
+      const response = await api.put(`/wildlife/${id}/`, updatedData);
+      setWildlife((prev) =>
+        prev.map((animal) => (animal.id === id ? response.data : animal))
+      );
+    } catch (error) {
+      console.error('Error updating wildlife:', error);
+    }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("userRole");
-    setUserRole("guest");
+  const deleteWildlife = async (id) => {
+    try {
+      await api.delete(`/wildlife/${id}/`);
+      setWildlife((prev) => prev.filter((animal) => animal.id !== id));
+    } catch (error) {
+      console.error('Error deleting wildlife:', error);
+    }
   };
 
   const router = createBrowserRouter([
     {
-      path: "/",
-      element: (
-        <Home
-          experiences={experiences}
-          wildlife={wildlife}
-          onAddExperience={addExperience}
-          onUpdateExperience={updateExperience}
-          onDeleteExperience={deleteExperience}
-          onAddWildlife={addWildlife}
-          onUpdateWildlife={updateWildlife}
-          onDeleteWildlife={deleteWildlife}
-          userRole={userRole}
-        />
-      ),
+      path: '/',
+      element: <Layout userRole={userRole} />,
+      children: [
+        {
+          index: true,
+          element: (
+            <Home
+              experiences={experiences}
+              wildlife={wildlife}
+              onAddExperience={addExperience}
+              onUpdateExperience={updateExperience}
+              onDeleteExperience={deleteExperience}
+              onAddWildlife={addWildlife}
+              onUpdateWildlife={updateWildlife}
+              onDeleteWildlife={deleteWildlife}
+              userRole={userRole}
+            />
+          ),
+        },
+        {
+          path: 'experience/:id',
+          element: <ExperienceDetails experiences={experiences} />,
+        },
+        {
+          path: 'admin',
+          element: (
+            <AdminPanel
+              experiences={experiences}
+              onAddExperience={addExperience}
+              onUpdateExperience={updateExperience}
+              onDeleteExperience={deleteExperience}
+              wildlife={wildlife}
+              onAddWildlife={addWildlife}
+              onUpdateWildlife={updateWildlife}
+              onDeleteWildlife={deleteWildlife}
+              userRole={userRole} // ✅ You can use this in AdminPanel too
+            />
+          ),
+        },
+        {
+          path: 'choose-role',
+          element: <ChooseRole />,
+        },
+      ],
     },
     {
-      path: "/experience/:id",
-      element: <ExperienceDetails experiences={experiences} />,
-    },
-    {
-      path: "/admin",
-      element: (
-        <AdminPanel
-          experiences={experiences}
-          onAddExperience={addExperience}
-          onUpdateExperience={updateExperience}
-          onDeleteExperience={deleteExperience}
-          wildlife={wildlife}
-          onAddWildlife={addWildlife}
-          onUpdateWildlife={updateWildlife}
-          onDeleteWildlife={deleteWildlife}
-        />
-      ),
-    },
-    {
-      path: "/login",
+      path: '/login',
       element: <Login />,
     },
     {
-      path: "/signup",
+      path: '/signup/:role',
       element: <Signup />,
+    },
+    {
+      path: '*',
+      element: <div>404 - Page Not Found</div>,
     },
   ]);
 
